@@ -1,39 +1,42 @@
 <script context="module">
-	import { APIurl } from '../../Url';
 	export const prerender = true;
-	const query = `getPostBySlug($slug: ID!) {
-  post(id: $slug, idType: SLUG) {
-    date
-    title
-    content
-    author {
-      node {
-        name
-      }
-    }
-    categories {
-      nodes {
-        name
-      }
-    }
-    featuredImage {
-      node {
-        sourceUrl
-        altText
-        mediaDetails {
-          width
-          height
+	import { APIurl } from '../../Url';
+
+	const query = `
+      query getPostBySlug($slug: ID!) {
+        post(id: $slug, idType: SLUG) {
+          date
+          title
+          content
+          author {
+            node {
+              name
+            }
+          }
+          categories {
+            nodes {
+              name
+            }
+          }
+          featuredImage {
+            node {
+              sourceUrl
+              altText
+              mediaDetails {
+                width
+                height
+              }
+            }
+          }
         }
       }
-    }
-  }
-}`;
+    `;
 
 	export async function load({ url, params, fetch }) {
 		const response = await fetch(APIurl, {
 			method: 'POST',
 			headers: {
-				'Content-Type': ' application/json'
+				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
 				query,
@@ -42,11 +45,10 @@
 				}
 			})
 		});
-
+		console.log(params);
 		if (response.ok) {
-			const resObj = await response.json();
-			const { post } = resObj.data;
-			console.log(resObj);
+			const responseObj = await response.json();
+			const { post } = responseObj.data;
 
 			return {
 				props: {
@@ -68,4 +70,40 @@
 	const categories = post.categories?.nodes?.map((category) => category.name) ?? [];
 </script>
 
-<a href="/blog" class="blog-link">&#8592;Blog</a>
+<a href="/blog" class="blog-link">&#8592; Blog</a>
+<article>
+	{#if post.featuredImage}
+		<img src={post.featuredImage.node.sourceUrl} alt={post.featuredImage.node.altText} />
+	{/if}
+	<h1>{post.title}</h1>
+	<p class="post-meta">
+		✍️ {post.author.node.name} on {formatDate(post.date)}
+	</p>
+	<div>{@html post.content}</div>
+	{#if categories.length}
+		<div class="category-list">
+			<h4>Categorized As</h4>
+			<p>{categories.join(', ')}</p>
+		</div>
+	{/if}
+</article>
+
+<style>
+	.blog-link {
+		text-decoration: none;
+	}
+	article {
+		margin-top: 2rem;
+	}
+	article img {
+		max-width: 100%;
+	}
+	.category-list {
+		border-top: 2px solid var(--color-gray-9);
+		margin-top: 2.5rem;
+		padding-top: 2rem;
+	}
+	.category-list h4 {
+		margin: 0;
+	}
+</style>

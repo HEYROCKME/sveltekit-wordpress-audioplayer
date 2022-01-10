@@ -38,7 +38,7 @@
 		if (response.ok) {
 			const resObj = await response.json();
 			const posts = resObj.data.posts.nodes;
-			console.log(resObj);
+			// console.log(resObj);
 
 			return {
 				props: {

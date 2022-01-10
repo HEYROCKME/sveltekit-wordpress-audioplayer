@@ -1,5 +1,4 @@
 <script>
-	import { siteUrl } from '../Url';
 	export let post;
 </script>
 
@@ -8,6 +7,7 @@
 	<h2>
 		<a href={`/blog${post.uri}`}>{post.title}</a>
 	</h2>
+	{post.uri}
 	{@html post.excerpt}
 
 	<a href={`/blog${post.uri}`}>read more...</a>
