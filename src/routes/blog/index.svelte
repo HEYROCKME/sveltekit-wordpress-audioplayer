@@ -6,6 +6,7 @@
     posts {
       nodes {
         databaseId
+		link
         uri
         title
         excerpt
