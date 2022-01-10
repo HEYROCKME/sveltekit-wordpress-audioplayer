@@ -1,4 +1,6 @@
 <script context="module">
+	import { APIurl } from '../../Url';
+
 	const query = `
   query getPosts {
     posts {
@@ -24,18 +26,18 @@
   `;
 
 	export async function load({ fetch }) {
-		let url;
-		const response = await fetch(import.meta.env.VITE_PUBLIC_WORDPRESS_API_URL, {
+		const response = await fetch(APIurl, {
 			method: 'POST',
 			headers: {
-				'Content-type': 'application/json'
+				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ fetch })
+			body: JSON.stringify({ query })
 		}); //end of response
 
 		if (response.ok) {
 			const resObj = await response.json();
 			const posts = resObj.data.posts.nodes;
+			console.log(resObj);
 
 			return {
 				props: {
@@ -46,14 +48,14 @@
 
 		return {
 			status: response.status,
-			error: new Error(`Could not load ${url}`)
+			error: new Error(`Could not load `)
 		};
 	}
 </script>
 
 <script>
-	import Postcard from '../../components/PostCard.svelte';
-	let posts;
+	import PostCard from '../../components/PostCard.svelte';
+	export let posts;
 </script>
 
 <h1>Blog</h1>
@@ -62,8 +64,7 @@
 	<ul>
 		{#each posts as post}
 			<li>
-				<p>{post.title}</p>
-				>
+				<PostCard {post} />
 			</li>
 		{/each}
 	</ul>

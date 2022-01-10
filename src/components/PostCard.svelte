@@ -3,5 +3,6 @@
 </script>
 
 <article>
+	{post.title}
 	{post.uri}
 </article>
