@@ -1,4 +1,28 @@
 <script context="module">
+	const query = `
+  query getPosts {
+    posts {
+      nodes {
+        databaseId
+        uri
+        title
+        excerpt
+        date
+        featuredImage {
+          node {
+            sourceUrl
+            altText
+            mediaDetails {
+              width
+              height
+            }
+          }
+        } 
+      }
+    }
+  }
+  `;
+
 	export async function load({ fetch }) {
 		let url;
 		const response = await fetch(import.meta.env.VITE_PUBLIC_WORDPRESS_API_URL, {
