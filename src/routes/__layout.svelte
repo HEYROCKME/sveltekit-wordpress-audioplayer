@@ -1,7 +1,9 @@
 <script context="module">
 	import '../layout.css';
+	import PodcastPlayer from '../components/PodcastPlayer.svelte';
 </script>
 
+<PodcastPlayer />
 <main>
 	<slot />
 </main>
